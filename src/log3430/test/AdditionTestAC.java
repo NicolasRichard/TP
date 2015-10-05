@@ -1,14 +1,16 @@
 package log3430.test;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.runner.RunWith;
+
 import log3430.source.Addition;
+import static org.junit.Assert.*;
+
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
+
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
