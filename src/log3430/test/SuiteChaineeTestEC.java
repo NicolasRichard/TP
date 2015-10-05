@@ -31,9 +31,9 @@ public class SuiteChaineeTestEC {
                  {"liste.properties","dhwdjwd",2,3,6,true},
                  {"liste.properties","soustraction",2,3,-1,true},
                  {"","addition",1,2,5,false},
-                 {"","division",1,2,5,false},
-                 {"","division",1,2,0,false},
-                 {"","division",1,2,10,false},
+                 {"liste.properties","division",1,2,5,false},
+                 {"liste.properties","division",1,2,0,false},
+                 {"liste.properties","division",1,2,10,false},
                  
            });
     }

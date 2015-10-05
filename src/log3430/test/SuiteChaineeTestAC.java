@@ -24,21 +24,22 @@ public class SuiteChaineeTestAC {
 	private boolean etatVide;
 	
 	
-	/*@Parameters
+	@Parameters
     public static Collection<Object[]> donnees() {
     	
-    	Object[][] parameters = new Object[][] {     
+    	
+    	return Arrays.asList(new Object[][] {     
                 {"liste.properties","addition",2,3,6,true},
                 {"liste.properties","dhwdjwd",2,3,6,true},
                 {"liste.properties","soustraction",2,3,-1,true},
                 {"","addition",1,2,5,false},
-                {"","division",1,2,5,false},
-                {"","division",1,2,0,false},
-                {"","division",1,2,10,false},
+                {"liste.properties","division",1,2,5,false},
+                {"liste.properties","division",1,2,0,false},
+                {"liste.properties","division",1,2,10,false},
                 
-          };
-    	return Arrays.asList(parameters);
-    }*/
+          });
+ 
+    }
 
 
     
