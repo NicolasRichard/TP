@@ -8,7 +8,7 @@ import static java.lang.Math.abs;
  * @author Nicolas Richard
  * @author Adrien Budet
  */
-public class Division implements ICommand {
+public class Division implements Calculator {
 
     @Override
     public int operate(int val1, int val2) {

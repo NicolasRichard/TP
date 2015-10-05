@@ -15,12 +15,12 @@ import java.util.TreeSet;
  * @author Nicolas Richard
  * @author Adrien Budet
  */
-public class SuiteChainee
+public class SuiteChainee implements Suite
 {
     private File     file;
     private Node     header;
     private int      maxSize = 0;
-    private ICommand operator;
+    private Calculator operator;
     private String   operatorName = null;
     private int      size = 0;
     private Node     tail;
@@ -287,8 +287,8 @@ public class SuiteChainee
      *
      * @throws java.lang.IllegalArgumentException Si l'opération n'est pas supportée.
      */
-    private ICommand createOperator(String operation) {
-        ICommand returnedValue = null;
+    private Calculator createOperator(String operation) {
+        Calculator returnedValue = null;
         switch (operation) {
             case "addition":
                 returnedValue = new Addition();

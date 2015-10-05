@@ -7,7 +7,7 @@ package log3430.source;
  * @author Nicolas Richard
  * @author Adrien Budet
  */
-public interface ICommand {
+public interface Calculator {
 
     /**
      * Effectue un calcul � partir des valeurs fournies.

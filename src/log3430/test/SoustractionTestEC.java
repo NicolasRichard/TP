@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Collection;
 
-import log3430.source.ICommand;
+import log3430.source.Calculator;
 import log3430.source.Soustraction;
 
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class SoustractionTestEC {
 	
 	@Test
 	public void test() {
-		ICommand operateur = new Soustraction();
+		Calculator operateur = new Soustraction();
 		int resultat = operateur.operate(val1, val2);
 		assertEquals(resultat, val1 - val2);
 	}

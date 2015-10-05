@@ -6,7 +6,7 @@ package log3430.source;
  * @author Nicolas Richard
  * @author Adrien Budet
  */
-public class Soustraction implements ICommand{
+public class Soustraction implements Calculator{
 
     @Override
     public int operate(int val1, int val2) {
