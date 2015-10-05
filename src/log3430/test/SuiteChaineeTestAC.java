@@ -28,18 +28,27 @@ public class SuiteChaineeTestAC {
     public static Collection<Object[]> donnees() {
     	
     	
-    	return Arrays.asList(new Object[][] {     
+    	Object[][] parameters = new Object[5][5];
+    	Object[][] vals = new Object[][] {     
                 {"liste.properties","addition",2,3,6,true},
                 {"liste.properties","dhwdjwd",2,3,6,true},
                 {"liste.properties","soustraction",2,3,-1,true},
-                {"","addition",1,2,5,false},
+                {"f4f4","addition",1,2,5,false},
                 {"liste.properties","division",1,2,5,false},
                 {"liste.properties","division",1,2,0,false},
                 {"liste.properties","division",1,2,10,false},
                 
-          });
+          };
+   
+    	for (int i = 0; i < 5; i++) {
+    		for (int j = 0; j < 5; j++) {
+    			parameters[i][j] = new Object[] {vals[i], vals[j]};
+    		}
+    	}
+    	return Arrays.asList(parameters);
  
     }
+	
 
 
     
@@ -83,4 +92,3 @@ public class SuiteChaineeTestAC {
 
 		
 	}
-}
