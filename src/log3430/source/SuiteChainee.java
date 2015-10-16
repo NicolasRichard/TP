@@ -17,13 +17,11 @@ import java.util.TreeSet;
  */
 public class SuiteChainee implements Suite
 {
-    private File     file;
-    private Node     header;
-    private int      maxSize = 0;
+    private File       file;
+    private Liste      liste = new ListeChainee();
+    private int        maxSize = 0;
     private Calculator operator;
-    private String   operatorName = null;
-    private int      size = 0;
-    private Node     tail;
+    private String     operatorName = null;
 
     /**
      * Méthode permettant de construire une suite depuis l'interpréteur de
@@ -89,9 +87,9 @@ public class SuiteChainee implements Suite
         }
         add(val1);
         add(val2);
-        while (size < taille) {
-            int preprevious = getAt(size - 2);
-            int previous = getAt(size - 1);
+        while (liste.getSize() < taille) {
+            int preprevious = getAt(liste.getSize() - 2);
+            int previous = getAt(liste.getSize() - 1);
             add(operator.operate(preprevious, previous));
         }
         maxSize = taille;
@@ -105,18 +103,7 @@ public class SuiteChainee implements Suite
      * @param element Valeur à ajouter à la fin de la suite.
      */
     public void add(int element) {
-        // Si la liste est vide, on définit le premier noeud.
-        if (size == 0) {
-            header = new Node(element);
-            size++;
-            if (tail == null) {
-                tail = header;
-            }
-        } else { // On ajoute l'élément à la suite de la queue.
-            tail.next = new Node(element);
-            tail = tail.next;
-            size++;
-        }
+        liste.add(element);
     }
 
     /**
@@ -130,17 +117,7 @@ public class SuiteChainee implements Suite
      *                                   fourni.
      */
     public int getAt(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Valeur inexistante");
-        }
-        Node currentNode = header;
-        int i = 0;
-        // Se déplacer à la position
-        while(i != index) {
-            i++;
-            currentNode = currentNode.next;
-        }
-        return currentNode.data;
+        return liste.getAt(index);
     }
 
     /**
@@ -149,7 +126,7 @@ public class SuiteChainee implements Suite
      * @return Le nombre d'éléments au sein de la suite.
      */
     public int getSize() {
-        return size;
+        return liste.getSize();
     }
 
     /**
@@ -161,34 +138,7 @@ public class SuiteChainee implements Suite
      *                                             la position spécifiée.
      */
     public void removeAt(int index) {
-        if(index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Valeur inexistante");
-        }
-        // S'il s'agit du premier élément, on supprime ce dernier on fait
-        // pointer la tête sur le noeud suivant.
-        if(index == 0) {
-            header = header.next;
-            size--;
-        } else {
-            int i = 0;
-            Node currentNode = header;
-            Node previousNode = null;
-            // Se déplacer à la position
-            while(i < index) {
-                i++;
-                previousNode = currentNode;
-                currentNode = currentNode.next;
-            }
-            // Supprimer le noeud à cette position
-            previousNode.next = currentNode.next;
-            size--;
-            if (currentNode == header) {
-                header = header.next;
-            }
-            if (currentNode == tail) {
-                tail = previousNode;
-            }
-        }
+        liste.removeAt(index);
     }
 
     /**
@@ -200,33 +150,14 @@ public class SuiteChainee implements Suite
      * @throws java.lang.IllegalArgumentException Si l'élément n'existe pas.
      */
     public void removeItem(int element) {
-        Node currentNode = header;
-        Node previousNode = null;
-        while (currentNode != null && !(currentNode.data == element)) {
-            previousNode = currentNode;
-            currentNode = currentNode.next;
-        }
-        if(currentNode == null) {
-            throw new IllegalArgumentException("La valeur n'est pas présente.");
-        } else {
-            previousNode.next = currentNode.next;
-            size--;
-        }
-        if (currentNode == header) {
-            header = header.next;
-        }
-        if (currentNode == tail) {
-            tail = previousNode;
-        }
+        liste.removeItem(element);
     }
 
     /**
      *  Vide la suite de son contenu.
      */
     public void reset() {
-        size = 0;
-        header = null;
-        tail = null;
+        liste.reset();
     }
 
     /**
@@ -240,18 +171,7 @@ public class SuiteChainee implements Suite
      *                                             la position spécifiée.
      */
     public void setAt(int value, int index) {
-        if(index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Valeur inexistante");
-        }
-        Node currentNode = header;
-        int i = 0;
-        // Se déplacer à la position
-        while(i < index) {
-            i++;
-            currentNode = currentNode.next;
-        }
-        // Modification du contenu du noeud
-        currentNode.data = value;
+        liste.setAt(value, index);
     }
 
     /**
@@ -265,14 +185,12 @@ public class SuiteChainee implements Suite
         // fournie à la construction et qui ne sont pas tenues de suivre
         // l'opérateur.
         boolean isValid = true;
-        if (size > 2) {
-            Node preprevious = header;
-            Node previous = header.next;
-            for (int i = 2; i < size && isValid; i++) {
-                int value = operator.operate(preprevious.data, previous.data);
-                isValid = value == previous.next.data;
-                preprevious = previous;
-                previous = previous.next;
+        if (liste.getSize() > 2) {
+            for (int i = 2; i < liste.getSize() && isValid; i++) {
+            	int v1 = liste.getAt(i - 2);
+            	int v2 = liste.getAt(i - 1);
+                int value = operator.operate(v1, v2);
+                isValid = value == liste.getAt(i);
             }
         }
         return isValid;
@@ -299,7 +217,7 @@ public class SuiteChainee implements Suite
             case "multiplication":
                 returnedValue = new Multiplication();
                 break;
-            case "Division":
+            case "division":
                 returnedValue = new Division();
                 break;
             default:
@@ -360,20 +278,18 @@ public class SuiteChainee implements Suite
                         new TreeSet<Object>(super.keySet()));
             }
         };
-        properties.put("Parametre1", Integer.toString(header.data));
-        properties.put("Parametre2", Integer.toString(header.next.data));
+        properties.put("Parametre1", Integer.toString(liste.getAt(0)));
+        properties.put("Parametre2", Integer.toString(liste.getAt(1)));
         properties.put("Parametre3", operatorName);
-        properties.put("Parametre4", Integer.toString(size));
+        properties.put("Parametre4", Integer.toString(liste.getSize()));
         properties.put("Parametre5", Integer.toString(maxSize));
         String content = "";
-        Node current = header;
-        for (int i = 0; i < size; i++) {
-            if (i != size - 1) {
-                content += Integer.toString(current.data) + ", ";
+        for (int i = 0; i < liste.getSize(); i++) {
+            if (i != liste.getSize() - 1) {
+                content += Integer.toString(liste.getAt(i)) + ", ";
             } else {
-                content += Integer.toString(current.data);
+                content += Integer.toString(liste.getAt(i));
             }
-            current = current.next;
         }
         properties.put("Parametre6", content);
         OutputStream stream = null;
@@ -390,33 +306,6 @@ public class SuiteChainee implements Suite
             } catch (IOException e) {
                 // Ne rien faire.
             }
-        }
-    }
-
-    //**************************************************************************
-    // Classes imbriquées
-    //**************************************************************************
-
-    /**
-     * Noeud d'une liste chainée. Contient une valeur de la suite numérique
-     * ainsi qu'une référence sur la valeur suivante, si elle existe.
-     *
-     * @author Chunxia Zhang
-     * @author Nicolas Richard
-     * @author Adrien Budet
-     */
-    private static class Node {
-
-        private int  data;
-        private Node next;
-
-        /**
-         * Constructeur.
-         *
-         * @param data Valeur de la suite contenue au sein de ce noeud.
-         */
-        public Node(int data) {
-            this.data = data;
         }
     }
 }

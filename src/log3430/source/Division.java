@@ -13,19 +13,15 @@ public class Division implements Calculator {
     @Override
     public int operate(int val1, int val2) {
         int res = 0;
-        int absVal1 = abs(val1);
-        int absVal2 = abs(val2);
-        Multiplication mul = new Multiplication();
+        long absVal1 = abs((long)val1);
+        long absVal2 = abs((long)val2);
         if (val2 == 0) {
             throw new IllegalArgumentException("Division par zéro");
         } else {
-            int count = res;
-            int temp = mul.operate(count, absVal2);
-            while(temp <= absVal1) {
-                res = count;
-                count++;
-                temp = mul.operate(count, absVal2);
-            }
+        	while (absVal1 >= absVal2) {
+        		absVal1 -= absVal2;
+        		res++;
+        	}
         }
         if (!((val1 > 0 && val2 > 0) || (val1 < 0 && val2 < 0))) {
             res *= -1;
