@@ -1,4 +1,4 @@
-package log3430.source;
+package ca.polymtl.log3430;
 /**
  * Interface permettant d'impl�menter le patron Commande. Elle permet d'obtenir
  * un r�sultat num�rique � partir de deux entr�es enti�res.

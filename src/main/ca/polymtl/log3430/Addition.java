@@ -1,4 +1,4 @@
-package log3430.source;
+package ca.polymtl.log3430;
 /**
  * Classe permettant de r�aliser l'addition.
  *

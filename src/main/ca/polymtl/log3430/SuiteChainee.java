@@ -1,4 +1,4 @@
-package log3430.source;
+package ca.polymtl.log3430;
 
 import java.io.*;
 import java.util.Collections;

@@ -1,12 +1,10 @@
-package log3430.test;
+package ca.polymtl.log3430;
 
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
-
-import log3430.source.*;
 
 import org.junit.After;
 import org.junit.Before;

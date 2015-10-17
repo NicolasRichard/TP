@@ -1,13 +1,13 @@
-package log3430.source;
+package ca.polymtl.log3430;
 
 /**
- * Interface permettant de représenter une suite numérique.
+ * Interface permettant de représenter une liste
  * 
- * @author Nicolas
+ * @author Nicolas Richard
  * @author Adrien Budet
  * @author David Kanaa
  */
-public interface Suite {
+public interface Liste {
 	/**
      * Ajoute la valeur passée en paramètre à la suite de la dernière valeur
      * actuellement comprise dans la suite.
@@ -71,13 +71,4 @@ public interface Suite {
      *                                             la position spécifiée.
      */
     public void setAt(int value, int index);
-    
-    /**
-     * Vérifie que les éléments de la suite ont tous été construits à l'aide de
-     * l'opérateur fourni lors de la construction de cette suite.
-     *
-     * @return Si la suite est valide considérant l'opérateur fourni.
-     */
-    public boolean isValide();
-    
 }

@@ -1,12 +1,9 @@
-package log3430.test;
+package ca.polymtl.log3430;
 
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
-
-import log3430.source.Calculator;
-import log3430.source.Division;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +12,14 @@ import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Cas de test permettant de tester la classse {@link Division} à l'aide de la 
- * méthode EC.
+ * méthode AC.
  * 
  * @author David Kanaa
  * @author Nicolas Richard
  * @author Adrien Budet
  */
 @RunWith(Parameterized.class)
-public class DivisionTestEC {
+public class DivisionTestAC {
 
 	private boolean erreurAttendue = false;
 	private int val1 = 0;
@@ -30,21 +27,22 @@ public class DivisionTestEC {
 	
 	/**
 	 * Génère des données de tests. Chaque 3-tuple de données correspond à un 
-	 * cas de test. Le dernier élément du tuple indique si l'opération devrait
+	 * cas de test. Les données sont générées à la manière d'un produit 
+	 * cartésien. Le dernier élément du tuple indique si l'opération devrait
 	 * produire une erreur.
 	 * 
 	 * @return Les données de test.
 	 */
-	@Parameters(name = "EC{index}: {0} / {1}")
+	@Parameters(name = "AC{index}: {0} / {1}")
     public static Collection<Object[]> donnees() {
-        return Arrays.asList(new Object[][] {     
-                 { Integer.MIN_VALUE, 0 , true }, 
-                 { -100, -1, false }, 
-                 { 0, Integer.MAX_VALUE, false }, 
-                 { 1, -100, false }, 
-                 { 100, Integer.MIN_VALUE, false }, 
-                 { Integer.MAX_VALUE, 100, false }
-           });
+    	Object[][] parameters = new Object[49][];
+    	int[] vals = new int[] { Integer.MIN_VALUE, -100, -1, 0, 1, 100, Integer.MAX_VALUE };
+    	for (int i = 0; i < 7; i++) {
+    		for (int j = 0; j < 7; j++) {
+    			parameters[i*7+j] = new Object[] {vals[i], vals[j], vals[j] == 0};
+    		}
+    	}
+    	return Arrays.asList(parameters);
     }
     
     /**
@@ -52,7 +50,7 @@ public class DivisionTestEC {
      * @param val2   Seconde opérande de l'addition
      * @param erreur Si l'opérateur devrait lancer une erreur.
      */
-    public DivisionTestEC(int val1, int val2, boolean erreur) {
+    public DivisionTestAC(int val1, int val2, boolean erreur) {
     	this.val1 = val1;
     	this.val2 = val2;
     	this.erreurAttendue = erreur;

@@ -1,4 +1,4 @@
-package log3430.source;
+package ca.polymtl.log3430;
 
 /**
  * Liste implémentée sous la forme d'une série de noeud.
