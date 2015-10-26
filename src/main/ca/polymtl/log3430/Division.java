@@ -23,7 +23,7 @@ public class Division implements Calculator {
         		res++;
         	}
         }
-        if (!((val1 > 0 && val2 > 0) || (val1 < 0 && val2 < 0))) {
+        if (val1 < 0 ^ val2 < 0) {
             res *= -1;
         }
         return res;

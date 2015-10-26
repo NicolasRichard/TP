@@ -192,6 +192,8 @@ public class SuiteChainee implements Suite
                 int value = operator.operate(v1, v2);
                 isValid = value == liste.getAt(i);
             }
+        } else {
+        	return false;
         }
         return isValid;
     }

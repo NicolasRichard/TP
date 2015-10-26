@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -55,6 +57,10 @@ public class SuiteChaineeTestAC {
     // Méthodes statiques
     // *************************************************************************
 	
+	static {
+		instantierChoix();
+	}
+	
 	/**
 	 * Génère des données de tests. Chaque paire de données correspond à un cas
 	 * de test. Les données sont générées à la manière d'un produit cartésien.
@@ -62,15 +68,44 @@ public class SuiteChaineeTestAC {
 	 * @return Les données de test.
 	 */
 	@Parameters(name = "AC{index}: {0},{1},{2},{3},{4}-{5}-{6}")
-    public static Collection<Object[]> donnees() {    	
-    	ArrayList<Object[]> donnees = new ArrayList<Object[]>();
-    	for (Collection<Choix> c : choix) {
-    		Iterator<Choix> it = c.iterator();
-    		while (it.hasNext()) {
-    			Choix element = it.next();
-    			
+    public static Collection<Object[]> donnees() {    
+    	Collection<Object[]> donnees = new LinkedList<Object[]>();
+    	int nbCombinaisons = 1;
+    	for (List<Choix> parametre : choix) {
+    		nbCombinaisons *= parametre.size();
+    	}
+    	Set<Choix> erreurs = new HashSet<Choix>();
+    	for (int i = 0; i < nbCombinaisons; i++) {
+    		boolean doitEtreAjouter = true;
+    		Combinaison combinaison = new Combinaison();
+    		int nbActuel = 1;
+    		for (List<Choix> parametre : choix) {
+    			nbActuel *= parametre.size();
+    			int index = (i / (nbCombinaisons / nbActuel)) % parametre.size();
+    			Choix selection = parametre.get(index);
+    			if (selection.estErreur) {
+    				if (combinaison.estErreur) {
+    					doitEtreAjouter = false;
+    					break;
+    				} else if (erreurs.contains(selection)){
+    					doitEtreAjouter = false;
+    					break;
+    				} else {
+    					erreurs.add(selection);
+    				}
+    			}
+    			doitEtreAjouter = combinaison.ajouter(selection);
+    			if (!doitEtreAjouter) {
+    				break;
+    			}
+    		}
+    		if (doitEtreAjouter) {
+    			Collection<Object> valeurs = combinaison.valeurs;
+    			valeurs.add(combinaison.estErreur);
+    			donnees.add(valeurs.toArray());
     		}
     	}
+    	return donnees;
     }
     
     /**
@@ -78,44 +113,40 @@ public class SuiteChaineeTestAC {
      * manière à ce que la méthode {@link donnees} ait pour seule responsabilité
      * la combinaison des choix.
      */
-    @BeforeClass
     public static void instantierChoix() {
     	Object propC = new Object();
     	Object propV = new Object();
     	Object propId = new Object();
     	Object propDiff = new Object();
+    	choix.add(new ArrayList<Choix>());
     	choix.get(0).add(new Choix(fichier.getName(), Arrays.asList(propC), 
     			                Arrays.asList()));
     	choix.get(0).add(new Choix("", false));
-    	choix.get(1).add(new Choix("Addition", Arrays.asList(propV), 
+    	choix.add(new ArrayList<Choix>());
+    	choix.get(1).add(new Choix("addition", Arrays.asList(propV), 
     			                Arrays.asList()));
-    	choix.get(1).add(new Choix("Soustraction", Arrays.asList(propV), 
+    	choix.get(1).add(new Choix("soustraction", Arrays.asList(propV), 
                 Arrays.asList()));
-    	choix.get(1).add(new Choix("Multiplication", Arrays.asList(propV), 
+    	choix.get(1).add(new Choix("multiplication", Arrays.asList(propV), 
                 Arrays.asList()));
-    	choix.get(1).add(new Choix("Division", Arrays.asList(propV), 
+    	choix.get(1).add(new Choix("division", Arrays.asList(propV), 
                 Arrays.asList()));
     	choix.get(1).add(new Choix("", true));
+    	choix.add(new ArrayList<Choix>());
     	choix.get(2).add(new Choix(4, Arrays.asList(propId), Arrays.asList(propV)));
     	choix.get(2).add(new Choix(8, Arrays.asList(propDiff), Arrays.asList(propV)));
+    	choix.add(new ArrayList<Choix>());
     	choix.get(3).add(new Choix(4, Arrays.asList(), Arrays.asList(propId, propV)));
     	choix.get(3).add(new Choix(3, Arrays.asList(), Arrays.asList(propDiff, propV)));
+    	choix.add(new ArrayList<Choix>());
     	choix.get(4).add(new Choix(1, true));
     	choix.get(4).add(new Choix(11, true));
     	choix.get(4).add(new Choix(2, Arrays.asList(), Arrays.asList(propV)));
     	choix.get(4).add(new Choix(7, Arrays.asList(), Arrays.asList(propV)));
     	choix.get(4).add(new Choix(10, Arrays.asList(), Arrays.asList(propV)));
+    	choix.add(new ArrayList<Choix>());
     	choix.get(5).add(new Choix(true, Arrays.asList(), Arrays.asList(propV)));
-    	choix.get(5).add(new Choix(true, Arrays.asList(), Arrays.asList(propV, propC)));
-    }
-    
-    private static void combiner(Object[] c, int index) {
-    	Collection choixDispos = choix.get(index);
-    	Iterator<Choix> it = choixDispos.iterator();
-    	while (it.hasNext()) {
-    		Choix selection = it.next();
-    		if 
-    	}
+    	choix.get(5).add(new Choix(false, Arrays.asList(), Arrays.asList(propV, propC)));
     }
     
     // *************************************************************************
@@ -151,7 +182,7 @@ public class SuiteChaineeTestAC {
      */
     @Before
     public void creerFichier() {
-    	new SuiteChainee("liste.properties", "addition", 1, 2, 5, true);
+    	new SuiteChainee(fichier.getName(), "addition", 1, 2, 5, true);
     }
     
     /**
@@ -159,9 +190,8 @@ public class SuiteChaineeTestAC {
      */
     @After
     public void detruireFichier() {
-    	File f = new File(chemin);
-    	if (f.exists()) {
-    		f.delete();
+    	if (fichier.exists()) {
+    		fichier.delete();
     	}
     }
     
@@ -221,7 +251,7 @@ public class SuiteChaineeTestAC {
 			File f = new File(chemin);
 			assertTrue(f.exists() && !f.isDirectory());
 		} catch(Exception e){
-			assertTrue(e instanceof IllegalArgumentException &&(operateur.equals("dsfsf")||taille < 2 || taille > 10));
+			assertTrue(e instanceof IllegalArgumentException &&(operateur.equals("")||taille < 2 || taille > 10));
 		}
 	}    
     
@@ -240,9 +270,9 @@ public class SuiteChaineeTestAC {
         // *********************************************************************
         // Attributs privés
         // *********************************************************************
-    	private Collection<Object> contraintes;
+    	private Collection<Object> contraintes = new ArrayList<Object>();
     	private boolean estErreur;
-    	private Collection<Object> proprietes;
+    	private Collection<Object> proprietes = new ArrayList<Object>();
     	private Object valeur;
     	
         // *********************************************************************
@@ -271,47 +301,51 @@ public class SuiteChaineeTestAC {
     	 */
     	public Choix(Object v, Collection<Object> p, Collection<Object> c) {
     		this(v, false);
-    		this.contraintes = contraintes;
+    		this.contraintes = c;
     		this.proprietes = p;
     	}
+    }
+    
+    /**
+     * Combinaison de choix représentant un ensemble de données de test
+     * 
+     * @author Nicolas Richard
+     */
+    private static class Combinaison {
+    	
+        // *********************************************************************
+        // Attributs
+        // *********************************************************************
+    	
+    	private boolean estErreur = false;
+    	private Collection<Object> valeurs = new ArrayList<Object>();
+    	private Collection<Object> proprietes = new HashSet<Object>();
+    	
     	
         // *********************************************************************
         // Méthodes
         // *********************************************************************
     	
     	/**
-    	 * Indique si une propriété du choix fourni n'est pas une contrainte de 
-    	 * ce choix.
+    	 * Ajoute un choix à la combinaison
     	 * 
-    	 * @param c Choix dont on veut vérifier la compatibilité avec celui-ci.
-    	 * @return Si les deux choix peuvent être combinés dans un cas de test.
+    	 * @param c Choix à ajouter
+    	 * @return Si l'ajout est un succès ou non.
     	 */
-    	public boolean estComptatible(Choix c) {
-    		boolean estCompatible = true;
-    		for (Object p : c.proprietes) {
-    			if (contraintes.contains(p)) {
-    				estCompatible = false;
+    	public boolean ajouter(Choix c) {
+    		boolean estSucces = true;
+    		for (Object contrainte : c.contraintes) {
+    			estSucces = proprietes.contains(contrainte);
+    			if (!estSucces) {
+    				break;
     			}
     		}
-    		return estCompatible;
-    	}
-    	
-    	/**
-    	 * Indique si le choix est une erreur ou non.
-    	 * 
-    	 * @return Si le choix est une erreur.
-    	 */
-    	public boolean estErreur() {
-    		return estErreur;
-    	}
-    	
-    	/**
-    	 * Indique la valeur de ce choix.
-    	 * 
-    	 * @return La valeur du choix.
-    	 */
-    	public Object obtenirValeur() {
-    		return valeur;
-    	}
+    		if (estSucces) {
+    			valeurs.add(c.valeur);
+    			proprietes.addAll(c.proprietes);
+    			estErreur = estErreur || c.estErreur;
+    		}
+    		return estSucces;
+    	}    	
     }
 }

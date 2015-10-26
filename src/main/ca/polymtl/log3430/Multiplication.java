@@ -12,21 +12,13 @@ public class Multiplication implements Calculator {
 
     @Override
     public int operate(int val1, int val2) {
-        Addition add = new Addition();
-        int absVal1 = abs(val1);
-        int res = 0;
-        int absVal2 = abs(val2);
-        if (absVal2 == 0) {
-            res = 0;
-        } else {
-            while(absVal2-- != 0) {
-                res += add.operate(0, absVal1);
-
-            }
-        }
-        if(!((val1 > 0 && val2 > 0) || (val1 < 0 && val2 < 0))) {
-            res *= -1;
-        }
-        return res;
+    	int nbFois = abs(val1);
+    	int val2Abs = abs(val2);
+    	int resultat = 0;
+    	for (int i = 0; i < nbFois; i++) {
+    		resultat += val2Abs;
+    	}
+    	resultat = val1 < 0 ^ val2 < 0 ? -resultat : resultat;
+    	return resultat;
     }
 }

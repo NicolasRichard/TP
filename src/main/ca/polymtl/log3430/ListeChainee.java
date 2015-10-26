@@ -19,9 +19,7 @@ public class ListeChainee implements Liste {
         if (size == 0) {
             header = new Node(element);
             size++;
-            if (tail == null) {
-                tail = header;
-            }
+            tail = header;
         } else { // On ajoute l'élément à la suite de la queue.
             tail.next = new Node(element);
             tail = tail.next;
@@ -72,9 +70,6 @@ public class ListeChainee implements Liste {
             // Supprimer le noeud à cette position
             previousNode.next = currentNode.next;
             size--;
-            if (currentNode == header) {
-                header = header.next;
-            }
             if (currentNode == tail) {
                 tail = previousNode;
             }
@@ -84,7 +79,7 @@ public class ListeChainee implements Liste {
 	@Override
 	public void removeItem(int element) {
 		Node currentNode = header;
-        Node previousNode = null;
+        Node previousNode = header;
         while (currentNode != null && !(currentNode.data == element)) {
             previousNode = currentNode;
             currentNode = currentNode.next;
